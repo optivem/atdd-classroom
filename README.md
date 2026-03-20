@@ -3,11 +3,6 @@
 **[ATDD Bootcamp Dashboard](https://optivem.github.io/atdd-bootcamp/)**
 
 [![dashboard](https://github.com/optivem/atdd-bootcamp/actions/workflows/dashboard.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/dashboard.yml)
-[![auto-on-created](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-created.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-created.yml)
-[![auto-on-closed](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-closed.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-closed.yml)
-[![auto-on-comment](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-comment.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-comment.yml)
-[![auto-on-reopened](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-reopened.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-reopened.yml)
-[![auto-on-edited](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-edited.yml/badge.svg)](https://github.com/optivem/atdd-bootcamp/actions/workflows/auto-on-edited.yml)
 
 ATDD Bootcamp - Sandbox Project Reviews
 
