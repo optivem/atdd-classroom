@@ -434,6 +434,10 @@ ${modules.map((m) => `      <div class="module-legend-item"><span>${escapeHtml(m
     <a href="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions" target="_blank" rel="noopener">Actions</a>
   </div>
+  <div class="teacher-links">
+    <span>Refresh:</span>
+    <a href="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/dashboard.yml" target="_blank" rel="noopener">Refresh Dashboard</a>
+  </div>
   <script>
     document.getElementById('projectFilter').addEventListener('input', function() {
       const q = this.value.toLowerCase().trim();

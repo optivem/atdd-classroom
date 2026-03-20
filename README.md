@@ -68,3 +68,7 @@ When you've addressed feedback, add a comment on your issue describing what you 
 ## For Teachers
 
 [Project Board](https://github.com/orgs/optivem/projects/18)
+
+## Refresh
+
+[Refresh Dashboard](https://github.com/optivem/atdd-classroom/actions/workflows/dashboard.yml)
