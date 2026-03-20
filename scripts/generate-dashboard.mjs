@@ -131,8 +131,8 @@ function buildMatrix(issues, bootcamp) {
     const moduleLabel = labels.find((l) => /^module-\d{2}$/.test(l));
     const projectLabel = labels.find((l) => /^project-/.test(l));
 
-    // Skip issues that don't belong to this bootcamp
-    if (bootcampLabel && bootcampLabel !== `bootcamp-${bootcamp.id}`) continue;
+    // Only include issues that have the matching bootcamp label
+    if (bootcampLabel !== `bootcamp-${bootcamp.id}`) continue;
 
     if (moduleLabel && !projectLabel) {
       console.warn(
