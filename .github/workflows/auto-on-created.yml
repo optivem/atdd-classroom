@@ -40,7 +40,8 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           title: "DUPLICATE | ${{ github.event.issue.title }}"
-          body: "> [!CAUTION]\n> ## ❌ Duplicate Issue\n> A ticket for this project and module already exists: #${{ steps.duplicate.outputs.original-number }}\n>\n> **This issue has been closed automatically as a duplicate.**"
+          body: "Duplicate of #${{ steps.duplicate.outputs.original-number }}\n\n> [!CAUTION]\n> ## ❌ Duplicate Issue\n> A ticket for this project and module already exists: #${{ steps.duplicate.outputs.original-number }}\n>\n> **This issue has been closed automatically as a duplicate.**"
+          state-reason: "duplicate"
 
       - name: Add to project board
         if: steps.validate.outputs.is-valid == 'true' && steps.duplicate.outputs.is-duplicate != 'true'
