@@ -1,4 +1,4 @@
-# ATDD Classroom
+# ATDD Bootcamp
 
 [![dashboard](https://github.com/optivem/atdd-classroom/actions/workflows/dashboard.yml/badge.svg)](https://github.com/optivem/atdd-classroom/actions/workflows/dashboard.yml)
 [![auto-on-created](https://github.com/optivem/atdd-classroom/actions/workflows/auto-on-created.yml/badge.svg)](https://github.com/optivem/atdd-classroom/actions/workflows/auto-on-created.yml)
