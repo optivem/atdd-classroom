@@ -209,7 +209,7 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
     const nameHtml = proj.repo
       ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener" title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</a>`
       : `<span title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</span>`;
-    return `<th class="project-header" title="${escapeHtml(proj.name)} (${pct}%)">${nameHtml}</th>`;
+    return `<th class="project-header" title="${escapeHtml(proj.name)} — ${doneCount} / ${totalTasks} tasks completed (${pct}%)">${nameHtml}</th>`;
   }).join("\n            ");
 
   // Rows: module headers + task rows
@@ -258,7 +258,7 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
   const progressCells = scored.map(({ doneCount }) => {
     const pct = totalTasks > 0 ? Math.round((doneCount / totalTasks) * 100) : 0;
     const progressClass = pct > 0 ? "progress-active" : "progress-none";
-    return `<td class="cell progress-cell ${progressClass}"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
+    return `<td class="cell progress-cell ${progressClass}" title="${doneCount} / ${totalTasks} tasks completed"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
   }).join("\n              ");
 
   const section = `
@@ -322,7 +322,7 @@ ${rows}
         <span class="card-code">${escapeHtml(proj.key)}</span>
       </div>
       <div class="card-lead">Lead: <a href="https://github.com/${encodeURIComponent(proj.lead)}" target="_blank" rel="noopener">${escapeHtml(displayName(proj.lead))}</a></div>
-      <div class="card-progress" title="Score: ${points}/${totalTasks}">
+      <div class="card-progress" title="${doneCount} / ${totalTasks} tasks completed">
         <div class="card-progress-fill ${fillClass}" style="width:${pct}%"></div>
         <div class="card-progress-text">${pct}%</div>
       </div>
