@@ -1,12 +1,16 @@
 name: dashboard
 
 on:
+  workflow_run:
+    workflows:
+      - auto-on-created
+      - auto-on-closed
+      - auto-on-comment
+      - auto-on-edited
+      - auto-on-reopened
+    types: [completed]
   push:
     branches: [main]
-  issues:
-    types: [opened, closed, reopened, edited, labeled, unlabeled]
-  issue_comment:
-    types: [created]
   schedule:
     - cron: '*/15 * * * *'  # every 15 minutes
   workflow_dispatch:
