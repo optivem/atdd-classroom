@@ -57,6 +57,34 @@ function countTotalTasks(modules) {
   return total;
 }
 
+function statusPoints(status) {
+  if (status === "Done") return 1;
+  if (status === "In Review" || status === "In Progress") return 0.5;
+  return 0;
+}
+
+// Compute aggregate project order sorted by total progress across all bootcamps
+function computeProjectOrder(bootcamps, matrices) {
+  const projects = config.projects;
+  const order = projects.map((proj) => {
+    const key = proj.key.toLowerCase();
+    let totalPoints = 0;
+    for (let i = 0; i < bootcamps.length; i++) {
+      const bc = bootcamps[i];
+      const data = matrices[i][key] || {};
+      for (const m of bc.modules) {
+        for (const t of (m.tasks || [])) {
+          const entry = data[`${m.number}-${t.number}`];
+          if (entry) totalPoints += statusPoints(entry.status);
+        }
+      }
+    }
+    return { proj, totalPoints };
+  });
+  order.sort((a, b) => b.totalPoints - a.totalPoints);
+  return order.map((o) => o.proj);
+}
+
 // --- GraphQL helpers ---
 
 async function graphql(query, variables = {}) {
@@ -172,20 +200,13 @@ function buildMatrix(issues, bootcamp) {
 
 // --- Generate HTML section for a single bootcamp ---
 
-function generateBootcampSection(bootcamp, matrix, owner, repo) {
+function generateBootcampSection(bootcamp, matrix, owner, repo, sortedProjects) {
   const modules = bootcamp.modules;
-  const projects = config.projects;
   const totalTasks = countTotalTasks(modules);
   const bootcampId = bootcamp.id;
 
-  function statusPoints(status) {
-    if (status === "Done") return 1;
-    if (status === "In Review" || status === "In Progress") return 0.5;
-    return 0;
-  }
-
-  // Score projects for sorting columns (best progress first)
-  const scored = projects.map((proj) => {
+  // Use the global sorted project order
+  const scored = sortedProjects.map((proj) => {
     const key = proj.key.toLowerCase();
     const data = matrix[key] || {};
     let points = 0;
@@ -201,7 +222,6 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
     }
     return { proj, key, data, points, doneCount };
   });
-  scored.sort((a, b) => b.points - a.points);
 
   // Column headers
   const projectHeaders = scored.map(({ proj, doneCount }) => {
@@ -353,17 +373,9 @@ function escapeHtml(str) {
 
 // --- Summary table ---
 
-function generateSummaryTable(bootcamps, matrices) {
-  const projects = config.projects;
-
-  function statusPoints(status) {
-    if (status === "Done") return 1;
-    if (status === "In Review" || status === "In Progress") return 0.5;
-    return 0;
-  }
-
-  // Compute per-project scores for sorting (sum across all bootcamps)
-  const projectTotals = projects.map((proj) => {
+function generateSummaryTable(bootcamps, matrices, sortedProjects) {
+  // Compute per-project totals using the global sorted order
+  const projectTotals = sortedProjects.map((proj) => {
     const key = proj.key.toLowerCase();
     let totalDone = 0;
     let totalTasks = 0;
@@ -386,7 +398,6 @@ function generateSummaryTable(bootcamps, matrices) {
     }
     return { proj, key, totalDone, totalTasks, totalPoints };
   });
-  projectTotals.sort((a, b) => b.totalPoints - a.totalPoints);
 
   // Column headers
   const projectHeaders = projectTotals.map(({ proj, totalDone, totalTasks }) => {
@@ -464,20 +475,24 @@ async function main() {
   const issues = await fetchAllIssues(owner, repo);
   console.log(`Fetched ${issues.length} issues.`);
 
-  const allSections = [];
-  const allCards = [];
   const allMatrices = [];
-
   for (const bootcamp of bootcamps) {
     console.log(`Processing ${bootcamp.name}...`);
-    const matrix = buildMatrix(issues, bootcamp);
-    allMatrices.push(matrix);
-    const { section, cards } = generateBootcampSection(bootcamp, matrix, owner, repo);
+    allMatrices.push(buildMatrix(issues, bootcamp));
+  }
+
+  // Compute a single project sort order based on aggregate progress
+  const sortedProjects = computeProjectOrder(bootcamps, allMatrices);
+
+  const allSections = [];
+  const allCards = [];
+  for (let i = 0; i < bootcamps.length; i++) {
+    const { section, cards } = generateBootcampSection(bootcamps[i], allMatrices[i], owner, repo, sortedProjects);
     allSections.push(section);
     allCards.push(cards);
   }
 
-  const summaryTable = generateSummaryTable(bootcamps, allMatrices);
+  const summaryTable = generateSummaryTable(bootcamps, allMatrices, sortedProjects);
 
   const now = new Date().toUTCString();
 
