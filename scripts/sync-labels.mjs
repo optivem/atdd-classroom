@@ -16,6 +16,7 @@ const COLORS = {
   project: "0075ca",   // blue
   module: "e4e669",    // yellow
   task: "c5def5",      // light blue
+  closed: "d73a4a",   // red
 };
 
 // Build expected labels from config (order: project, bootcamp, module, task)
@@ -44,6 +45,11 @@ for (const num of moduleNums) {
 }
 for (const num of taskNums) {
   expected.set(`task-${num}`, COLORS.task);
+}
+
+// Auto-close reason labels
+for (const reason of ["invalid", "duplicate", "blocked"]) {
+  expected.set(`closed-${reason}`, COLORS.closed);
 }
 
 // Fetch existing labels

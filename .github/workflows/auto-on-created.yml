@@ -29,6 +29,13 @@ jobs:
           title: "INVALID | ${{ github.event.issue.title }}"
           body: "> [!CAUTION]\n> ## ❌ Issue Rejected\n> Hi @${{ github.event.issue.user.login }}, you are not a member of the selected project.\n>\n> If you believe this is an error, please contact [Valentina Jemuović](https://github.com/valentinajemuovic).\n>\n> **This issue has been closed automatically.**"
 
+      - name: Label unauthorized issue
+        if: steps.validate.outputs.is-valid == 'false'
+        uses: ./.github/actions/add-labels
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          labels: "closed-invalid"
+
       - name: Check for duplicate issue
         id: duplicate
         if: steps.validate.outputs.is-valid == 'true'
@@ -49,6 +56,13 @@ jobs:
           body: "Duplicate of #${{ steps.duplicate.outputs.original-number }}\n\n> [!CAUTION]\n> ## ❌ Duplicate Issue\n> A ticket for this project and module already exists: #${{ steps.duplicate.outputs.original-number }}\n>\n> **This issue has been closed automatically as a duplicate.**"
           state-reason: "duplicate"
 
+      - name: Label duplicate issue
+        if: steps.validate.outputs.is-valid == 'true' && steps.duplicate.outputs.is-duplicate == 'true'
+        uses: ./.github/actions/add-labels
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          labels: "closed-duplicate"
+
       - name: Check module prerequisites
         id: prereqs
         if: steps.validate.outputs.is-valid == 'true' && steps.duplicate.outputs.is-duplicate != 'true'
@@ -66,6 +80,13 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           title: "BLOCKED | ${{ github.event.issue.title }}"
           body: "> [!CAUTION]\n> ## ❌ Prerequisites Not Met\n> You must complete all tasks in the previous module before starting this one.\n>\n> **Incomplete tasks:** ${{ steps.prereqs.outputs.missing-tasks }}\n>\n> Please complete those tasks first, then re-create this ticket.\n>\n> **This issue has been closed automatically.**"
+
+      - name: Label blocked issue
+        if: steps.validate.outputs.is-valid == 'true' && steps.duplicate.outputs.is-duplicate != 'true' && steps.prereqs.outputs.allowed == 'false'
+        uses: ./.github/actions/add-labels
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          labels: "closed-blocked"
 
       - name: Add to project board
         if: steps.validate.outputs.is-valid == 'true' && steps.duplicate.outputs.is-duplicate != 'true' && steps.prereqs.outputs.allowed != 'false'
